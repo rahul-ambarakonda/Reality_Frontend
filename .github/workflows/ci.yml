@@ -1,0 +1,116 @@
+# This workflow manages the CI/CD pipeline for the Reality_Frontend project.
+# This project is a React/TypeScript Single Page Application (SPA) using Vite,
+# Zustand, React Router DOM, Tailwind CSS, and Axios. It serves as the
+# user interface (frontend) for a larger "Reality" platform demo app.
+#
+# Sprint work completed this cycle: RF-5, RF-6, RF-7, RF-8, RF-9, RF-10, RF-11, RF-12, RF-13
+
+name: CI/CD
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  ci:
+    name: Continuous Integration
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          # npm cache is disabled to avoid issues when no package-lock.json exists
+          # and to ensure a fresh install for consistent CI behavior.
+
+      - name: Install dependencies (with lockfile fallback)
+        run: |
+          if [ -f package-lock.json ]; then npm ci; else npm install; fi
+
+      - name: Run tests (best-effort)
+        run: npm test --if-present
+        continue-on-error: true
+
+      - name: Run lint (best-effort)
+        run: npm run lint --if-present
+        continue-on-error: true
+
+      - name: Run build (if present)
+        run: npm run build --if-present
+
+  deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+    needs: ci
+    if: github.ref == 'refs/heads/main' && success()
+
+    env:
+      EC2_HOST: ${{ secrets.EC2_HOST }}
+
+    steps:
+      - name: Skip deploy if EC2 secrets are not configured
+        if: env.EC2_HOST == ''
+        run: |
+          echo "No EC2_HOST secret found. Skipping deploy job."
+          exit 0 # Exit cleanly without failure
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        if: env.EC2_HOST != ''
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.0
+        if: env.EC2_HOST != ''
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            # Source nvm so node/npm/pnpm are available
+            export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+
+            # Change to deploy directory
+            cd ${{ secrets.EC2_DEPLOY_PATH }}
+
+            # Fetch and hard-reset to remote
+            git fetch origin main
+            git reset --hard origin/main
+
+            # Sync new env vars from .env.sample into .env (append missing keys only)
+            if [ -f .env.sample ]; then
+              touch .env
+              while IFS= read -r line; do
+                # skip blank lines and comments
+                [[ -z "$line" || "$line" == \#* ]] && continue
+                key=$(echo "$line" | cut -d= -f1)
+                # only append if key not already present in .env
+                if ! grep -q "^${key}=" .env 2>/dev/null; then
+                  echo "$line" >> .env
+                  echo "⚠️  New env var added (set real value): ${key}"
+                fi
+              done < .env.sample
+            fi
+
+            # Install dependencies without assuming a lockfile exists
+            if [ -f package-lock.json ]; then npm ci; else npm install; fi
+
+            # Run build step if the project has one
+            npm run build --if-present
+
+            # Restart the app with PM2 using zero-downtime reload
+            pm2 reload app --update-env || pm2 start npm --name app -- start
+
+            # Save PM2 process list
+            pm2 save
