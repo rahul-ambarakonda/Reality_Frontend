@@ -1,8 +1,8 @@
 import React from 'react';
 import { Routes, Route, Link as RouterLink } from 'react-router-dom';
 import { AppBar, Toolbar, Button, Typography, Container } from '@mui/material';
-import Home from './Home';
-import About from './About';
+import HomePage from './pages/HomePage';
+import AboutPage from './pages/AboutPage';
 
 function App() {
   return (
@@ -22,8 +22,8 @@ function App() {
       </AppBar>
       <Container maxWidth="md" sx={{ mt: 4 }}>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<AboutPage />} />
         </Routes>
       </Container>
     </>
