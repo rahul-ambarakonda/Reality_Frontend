@@ -1,0 +1,47 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+pnpm-error.log*
+
+# Diagnostic reports (https://nodejs.org/api/report.html)
+.report/
+
+# Node.js
+# attention these files are in .gitignore since a long time
+# now but are NOT standard in new setups. You can safely remove them.
+node_modules
+/dist
+/build
+
+# Vite-specific
+.vite/
+
+# Testing
+/coverage
+.vitest/
+
+# Dependency directories
+# (npm typically uses node_modules)
+node_modules/
+
+# Yarn
+.yarn/
+
+# pnpm
+/pnpm-lock.yaml
+
+# editor directories and files
+.vscode
+.idea
+*.suo
+*.ntvsps
+*.njsproj
+*.sln
+*.sw?
+
+# Misc
+.DS_Store
