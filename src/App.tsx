@@ -1,9 +1,15 @@
 import React from 'react';
+import { Typography } from '@mui/material';
 
 function App() {
   return (
     <div>
-      <h1>Welcome to Reality Frontend!</h1>
+      <Typography variant="h1" component="h1">
+        Welcome to Reality Frontend!
+      </Typography>
+      <Typography variant="body1">
+        Hello MUI!
+      </Typography>
     </div>
   );
 }
