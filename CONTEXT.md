@@ -9,32 +9,44 @@ This project, named `Reality_Frontend`, serves as the user interface (frontend) 
 
 ### Tech Stack and Architecture
 
-*   **Tech Stack:** Based solely on the provided `README.md`, the specific frontend framework (e.g., React, Angular, Vue) or build tools (e.g., Webpack, Vite) are currently **unknown**.
-*   **Architecture:** It is most likely a **Single Page Application (SPA)**, a common architecture for modern web frontends, providing a dynamic and responsive user experience by loading a single HTML page and dynamically updating content as the user interacts. It will communicate with a RESTful or GraphQL backend API.
+*   **Tech Stack:**
+    *   **Frontend Framework:** React
+    *   **Language:** TypeScript
+    *   **Build Tool/Dev Server:** Vite
+    *   **State Management:** Zustand
+    *   **Routing:** React Router DOM
+    *   **Styling:** Tailwind CSS
+    *   **API Client:** Axios (for HTTP requests)
+*   **Architecture:** This is a **Single Page Application (SPA)**, providing a dynamic and responsive user experience by loading a single HTML page and dynamically updating content as the user interacts. It communicates with a RESTful backend API. The application follows a component-based architecture.
 
 ### Key Directories and Their Purpose
 
-Given the limited file tree, specific directories are not available. However, a typical frontend project like this would generally follow a structure similar to:
+The project's directory structure is as follows:
 
+*   **`public/`**: Contains static files such as `index.html` and the favicon, served directly.
 *   **`src/`**: Contains the main application source code.
     *   **`src/components/`**: Reusable UI components (e.g., buttons, cards, forms).
-    *   **`src/pages/`** or **`src/views/`**: Top-level components representing distinct application screens or routes.
-    *   **`src/utils/`** or **`src/helpers/`**: Utility functions, common helpers, and non-UI logic.
-    *   **`src/services/`** or **`src/api/`**: Modules for interacting with the backend API.
-    *   **`src/store/`**: (If using a state management library like Redux, Vuex, Zustand) Manages global application state.
+    *   **`src/pages/`**: Top-level components representing distinct application screens or routes.
+    *   **`src/utils/`**: Utility functions, common helpers, and non-UI logic.
+    *   **`src/api/`**: Modules for interacting with the backend API, including API client configuration and request logic.
+    *   **`src/store/`**: Manages global application state using Zustand.
     *   **`src/assets/`**: Static assets like images, fonts, and global stylesheets.
-*   **`public/`**: Static files that are served directly, often including `index.html` and the favicon.
-*   **`dist/`** or **`build/`**: The output directory for the compiled and bundled application, ready for deployment.
-*   **`config/`**: Configuration files for build tools, testing, or environment variables.
+    *   **`src/hooks/`**: Custom React hooks for encapsulating reusable logic.
+    *   **`src/types/`**: TypeScript type definitions and interfaces.
+    *   **`src/styles/`**: Global stylesheets and Tailwind CSS configuration.
+*   **`dist/`**: The output directory for the compiled and bundled application, ready for deployment.
+*   **`config/`**: Contains configuration files for environment variables (e.g., `.env` files).
 
 ### Important Conventions or Patterns
 
-Without access to the codebase, specific conventions are unknown. However, standard frontend development patterns and best practices would typically include:
+The project adheres to the following conventions and best practices:
 
-*   **Component-Based Architecture:** Encouraging the creation of small, reusable, and self-contained UI components.
-*   **State Management:** A consistent pattern for managing application state, especially for data fetched from the backend and user interface state.
-*   **Route-Based Navigation:** Using a client-side router for navigation between different pages/views without full page reloads.
-*   **Consistent Code Style:** Enforcement of a unified coding style (e.g., via ESLint and Prettier) for readability and maintainability.
-*   **API Client Abstraction:** Centralized logic for making API calls, handling authentication, and error reporting.
-*   **Environment Configuration:** Utilizing environment variables for different deployment targets (development, staging, production).
+*   **Component-Based Architecture:** Emphasizes the creation of small, reusable, and self-contained UI components for modularity and maintainability.
+*   **State Management:** Utilizes Zustand for efficient and centralized management of global application state.
+*   **Route-Based Navigation:** Implements client-side routing using React Router DOM for seamless navigation between different pages/views without full page reloads.
+*   **Consistent Code Style:** Enforces a unified coding style and formatting via **ESLint** and **Prettier** to ensure readability and maintainability across the codebase.
+*   **API Client Abstraction:** Centralizes logic for making API calls, handling authentication, and error reporting within the `src/api/` directory.
+*   **Environment Configuration:** Utilizes environment variables (via `.env` files) for managing different deployment targets (development, staging, production) and sensitive information.
+*   **Type Safety:** Leverages **TypeScript** across the entire codebase to enhance code quality, reduce bugs, and improve developer experience through static type checking.
+*   **Testing:** Basic unit and integration tests are set up, typically using tools like Vitest and React Testing Library.
 ```
