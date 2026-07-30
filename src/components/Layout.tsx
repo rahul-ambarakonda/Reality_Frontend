@@ -17,6 +17,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           <Button color="inherit" component={RouterLink} to="/">
             Home
           </Button>
+          <Button color="inherit" component={RouterLink} to="/projects">
+            Projects
+          </Button>
           <Button color="inherit" component={RouterLink} to="/about">
             About
           </Button>
